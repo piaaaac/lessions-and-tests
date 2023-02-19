@@ -1,3 +1,8 @@
+<!---------------------------------------------------------
+--  Absolute basic Threejs sketch
+--  via https://www.youtube.com/watch?v=6oFvqLfRnsU&t=886s
+----------------------------------------------------------->
+
 <!doctype html>
 <html>
 <head>
