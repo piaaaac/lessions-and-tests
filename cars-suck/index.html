@@ -28,7 +28,7 @@
   width: 250px;
 /*   border: 2px solid yellow; */
   transform: scale(1);
-  transition: transform 400ms;
+  transition: transform 400ms, left 400ms, top 400ms, opacity 400ms;
   pointer-events: none;
 }
 #p5-container {
@@ -62,11 +62,34 @@
 <div id="p5-container"></div>
 
 <script type="text/javascript">
+
 // -----------------------------------------
-// JS
+// State
+// -----------------------------------------
+
+var state = {
+  openImageEl: null,
+}
+
+// -----------------------------------------
+// Events
+// -----------------------------------------
+
+document.addEventListener('keydown', evt => {
+  if (evt.key === 'Escape') {
+    if (state.openImageEl !== null) {
+      closeImage(state.openImageEl);
+    }
+  }
+});
+
+// -----------------------------------------
+// JS events
 // -----------------------------------------
 
 function zoomImage (el) {
+  if (state.openImageEl !== null) return;
+
   var previews = document.querySelector("#previews");
   var r = el.getBoundingClientRect();
   console.log(r)
@@ -76,37 +99,46 @@ function zoomImage (el) {
   large.style.left = r.x +"px";
   large.style.top = r.y +"px";
 
+  // remember return parameters: x, y, scale
+  large.dataset.closeLeftPx = r.x;
+  large.dataset.closeTopPx = r.y;
 
-  var transX
-  var transY
-  var scale
+  // calculate new parameters
+  var ratioWindow = window.innerWidth / window.innerHeight;
+  var ratioImg = r.width / r.height;    
+  var scale;
+  if (ratioImg > ratioWindow) {
+    // make img height equal to window height
+    scale = window.innerHeight/large.clientHeight;
+  } else {
+    // make img width equal to window width
+    scale = window.innerWidth/large.clientWidth;
+  }
 
   setTimeout(() => {
+    large.style.transform = "scale("+ scale +")";
+    large.style.left = (window.innerWidth/2 - r.width/2) +"px";
+    large.style.top = (window.innerHeight/2 - r.height/2) +"px";
 
-    var ratioWindow = window.innerWidth / window.innerHeight;
-    var ratioImg = large.clientWidth / large.clientHeight;    
-    if (ratioImg > ratioWindow) {
-      // make img height equal to window height
-      large.style.transform = "scale("+ (window.innerHeight/large.clientHeight) +")";
-    } else {
-      // make img width equal to window width
-      large.style.transform = "scale("+ (window.innerWidth/large.clientWidth) +")";
-    }
-
+    state.openImageEl = large;
+    document.body.style.overflow = "hidden";
   })
-
-
 }
 
-
-// x
-// y
-// bottom
-// height
-// left
-// right
-// top
-// width
+function closeImage (el) {
+  console.log(el)
+  console.log(el.dataset)
+  el.style.left = el.dataset.closeLeftPx +"px";
+  el.style.top = el.dataset.closeTopPx +"px";
+  el.style.transform = "scale(1)";
+  el.style.opacity = 0;
+  
+  setTimeout(() => {
+    el.remove();
+    state.openImageEl = null;
+    document.body.style.overflow = "scroll";
+  }, 400)
+}
 
 // -----------------------------------------
 // P5
