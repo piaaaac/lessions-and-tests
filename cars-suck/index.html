@@ -22,6 +22,7 @@
 }
 .preview img {
   width: 100%;
+  cursor: nesw-resize;
 }
 .large {
   position: fixed;
@@ -37,6 +38,26 @@
   top: 0; right: 0; bottom: 0; left: 0;
   pointer-events: none;
 }
+#close-btn {
+  z-index: 3;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  display: none;
+}
+
+body.image-open {
+  overflow: hidden;
+}
+body.image-open #previews {
+  pointer-events: none;
+  user-select: none;
+}
+body.image-open #close-btn {
+  display: block;
+}
+
+
   </style>
 </head>
 <body>
@@ -61,6 +82,8 @@
 
 <div id="p5-container"></div>
 
+<a id="close-btn" onclick="resetUI();" href="#">X</a>
+
 <script type="text/javascript">
 
 // -----------------------------------------
@@ -77,15 +100,18 @@ var state = {
 
 document.addEventListener('keydown', evt => {
   if (evt.key === 'Escape') {
-    if (state.openImageEl !== null) {
-      closeImage(state.openImageEl);
-    }
+    resetUI();
   }
 });
 
 // -----------------------------------------
-// JS events
+// JS
 // -----------------------------------------
+function resetUI () {
+  if (state.openImageEl !== null) {
+    closeImage(state.openImageEl);
+  }
+}  
 
 function zoomImage (el) {
   if (state.openImageEl !== null) return;
@@ -121,7 +147,7 @@ function zoomImage (el) {
     large.style.top = (window.innerHeight/2 - r.height/2) +"px";
 
     state.openImageEl = large;
-    document.body.style.overflow = "hidden";
+    document.body.classList.add("image-open");
   })
 }
 
@@ -132,11 +158,11 @@ function closeImage (el) {
   el.style.top = el.dataset.closeTopPx +"px";
   el.style.transform = "scale(1)";
   el.style.opacity = 0;
+  document.body.classList.remove("image-open");
   
   setTimeout(() => {
     el.remove();
     state.openImageEl = null;
-    document.body.style.overflow = "scroll";
   }, 400)
 }
 
