@@ -1,5 +1,6 @@
+
 <!---------------------------------------------------------
---  Absolute basic Threejs sketch
+--  Basic Threejs timeline animation
 --  via https://www.youtube.com/watch?v=6oFvqLfRnsU&t=886s
 ----------------------------------------------------------->
 
@@ -12,6 +13,8 @@
 <link rel="stylesheet" href="https://unpkg.com/minimal-css-reset@1.1.0/reset.min.css">
 </head>
 <body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js" integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
 <script type="importmap">
@@ -50,12 +53,6 @@
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshLambertMaterial({color: 0xFF0000});
   const mesh = new THREE.Mesh(geometry, material);
-
-  mesh.position.x = 1;        // two ways to set
-  mesh.position.set(1, 0.8, 0); // two ways to set
-  mesh.rotation.set(Math.PI * 0.5, 0, 0);
-  mesh.scale.set(1, 2, 1);
-
   scene.add(mesh);
 
   // -----------------------------------------
@@ -72,12 +69,21 @@
 
   var render = function () {
     requestAnimationFrame(render);
-    
-    mesh.rotation.z += Math.PI * 0.005;
-
     renderer.render(scene, camera);
   }
   render();
+
+  // -----------------------------------------
+  // Timeline
+  // -----------------------------------------
+
+  var tl = new TimelineMax().delay(0.3);
+  
+  tl.to(mesh.scale, 1, {x: 2, ease: Expo.easeOut})
+  tl.to(mesh.position, 1, {x: 1, y: 1, ease: Expo.easeOut}, "-=1")
+  
+  tl.to(mesh.scale, 1, {x: 1, ease: Expo.easeOut})
+  tl.to(mesh.rotation, 1, {x: Math.PI * 0.5, ease: Expo.easeOut}, "-=1")
 
   // -----------------------------------------
   // Window resize handling
