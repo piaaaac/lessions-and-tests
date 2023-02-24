@@ -73,14 +73,16 @@ html, body {
   pointer-events: none;
 }
 #close-btn {
-  z-index: 3;
+  z-index: 30;
   position: fixed;
   right: 20px;
   top: 20px;
   display: none;
   text-decoration: none;
-  font-size: 3.5vmax;
+  font-size: 4.5vmax;
 }
+#close-btn::after { content: "🙀"; }
+#close-btn:hover::after { content: "😽"; }
 
 body.image-open {
   overflow: hidden;
