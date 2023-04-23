@@ -1,0 +1,22 @@
+title: Distort
+
+columns:
+  first:
+    width: 1/2
+    sections:
+      fields1:
+        type: fields
+        fields:
+          distortionMaps:
+            label: Distortion Maps
+            type: files
+
+  second:
+    width: 1/2
+    sections:
+      fields2:
+        type: fields
+        fields:
+          distortionMaterial:
+            label: Material to distort
+            type: files
